@@ -1,11 +1,9 @@
 package handlers
 
 import (
-	"encoding/json"
+	"github.com/orkhan-huseyn/microservices-w-go/data"
 	"log"
 	"net/http"
-
-	"github.com/orkhan-huseyn/microservices-w-go/data"
 )
 
 // Products handler
@@ -19,10 +17,20 @@ func NewProducts(l *log.Logger) *Products {
 }
 
 func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet: // handle GET methods
+		p.getProducts(rw, r)
+	case http.MethodPost: // handle POST methods
+		p.getProducts(rw, r)
+	default: // handle all other methods that are not implemented
+		rw.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func (p *Products) getProducts(rw http.ResponseWriter, _ *http.Request) {
 	lp := data.GetProducts()
-	d, err := json.Marshal(lp)
+	err := lp.ToJSON(rw)
 	if err != nil {
 		http.Error(rw, "Unable to marshall json", http.StatusInternalServerError)
 	}
-	rw.Write(d)
 }

@@ -62,7 +62,6 @@ func main() {
 	// make sure we shut down the server gracefully
 	// any alive connections will be tolorated up intil 30 seconds
 	// and then the server will be shutdown after everyone is done
-	tc, cf := context.WithTimeout(context.Background(), 30*time.Second)
+	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	s.Shutdown(tc)
-	defer cf()
 }
