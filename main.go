@@ -15,17 +15,14 @@ func main() {
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
 	// initialize handlers
 	// hello handler
-	hh := handlers.NewHello(l)
-	// and the goodbye handler
-	gh := handlers.NewGoodbye(l)
+	ph := handlers.NewProducts(l)
 
 	// creating a new serve mux
 	// instead of default serve mux
 	sm := http.NewServeMux()
 	// mapping handlers
 	// with the serve mux
-	sm.Handle("/", hh)
-	sm.Handle("/goodbye", gh)
+	sm.Handle("/", ph)
 
 	// create our own server
 	// specify read, write, idle timeout
@@ -42,6 +39,8 @@ func main() {
 	// non-blocking by calling it
 	// inside a go routine
 	go func() {
+		l.Println("Starting server on port 8080")
+
 		err := s.ListenAndServe()
 		if err != nil {
 			l.Fatal(err)
